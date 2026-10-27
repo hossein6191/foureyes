@@ -1,0 +1,78 @@
+[keeper] starting 2026-10-27T20:26:30.210Z
+[20:26:35] REQUESTER   0x34a40E4787856C74EeE8Eae5A40F961555b2bA1A  Kestrel Outdoor, the shop that owes the refunds, locks each payout and deploys the contract
+           BENEFICIARY 0xEd4785B086b003b2de2C9F8766C1B6F6D09aC515  the customer each refund is owed to
+           CHECKER_A   0x0F17A2aD659604dcEbDaa15031A5275Fe936E9ae  the first bookkeeper, who works every refund out alone
+           CHECKER_B   0x0464580d3AF3Ca53AF03B4C68F31805B78e379b0  the second bookkeeper, who works T1 and T2 out alone and never commits to T3
+           STRANGER    0x4724d938e297b7067B884CFFa6FaEbd0b3612512  somebody with no part in any task, who compares and expires
+
+[20:26:35] ---- 1: deploy FourEyes and open three tasks
+      [20:27:14] REQUESTER deploy foureyes  0xd6eb371739675d7d64efe19fdb551e332f81eb8ca039e23bc525a40d9cc93b2f  3 agree, 0 disagree, 2 idle  SUCCESS  0xAEEeAb4b80A9EA761a11dE3DF95CbF5F82423a1E
+      FourEyes at 0xAEEeAb4b80A9EA761a11dE3DF95CbF5F82423a1E
+      [20:27:53] REQUESTER open_task(0xEd4785B086b003b2de2C, A customer of Kestrel , 0x0F17A2aD659604dcEbDa, 0x0464580d3AF3Ca53AF03, 1530000000000000000, 50000000000000000, 3600, 3600) +1.63 GEN  0x00b3723b40fb20b19a33b33f32bebee20d5c29b5639d7f8d20d24c47bdf33ae3  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  REQUESTER sends open_task one atto short: refused, and every atto it sent comes back in the same transaction  - 3 agree, 0 disagree, 2 idle  {"ok": false, "reason": "send exactly the payout and both fees, 1630000000000000000 atto; this call sent 162999999999999
+      [20:28:32] REQUESTER open_task(0xEd4785B086b003b2de2C, A customer of Kestrel , 0x0F17A2aD659604dcEbDa, 0x0464580d3AF3Ca53AF03, 1530000000000000000, 50000000000000000, 3600, 3600) +1.63 GEN  0xc68e9ce5e283818688ca18165cded74759f692570f561d9659b8af1bc4a4a271  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  REQUESTER opens T1, locking 1.53 GEN for BENEFICIARY and 0.05 GEN for each checker; commit window 3600 s  - 3 agree, 0 disagree, 2 idle  {"ok": true, "task": "T1", "payout": "1530000000000000000", "fee": "50000000000000000", "held": "1630000000000
+      [20:29:14] REQUESTER open_task(0xEd4785B086b003b2de2C, A customer of Kestrel , 0x0F17A2aD659604dcEbDa, 0x0464580d3AF3Ca53AF03, 1530000000000000000, 50000000000000000, 3600, 3600) +1.63 GEN  0xaab8652c0b0cfe6e21e1ee8825981764b2644527e6f41cfdb06ac4429ce80d72  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  REQUESTER opens T2, locking 1.53 GEN for BENEFICIARY and 0.05 GEN for each checker; commit window 3600 s  - 3 agree, 0 disagree, 2 idle  {"ok": true, "task": "T2", "payout": "1530000000000000000", "fee": "50000000000000000", "held": "1630000000000
+      [20:29:53] REQUESTER open_task(0xEd4785B086b003b2de2C, A customer of Kestrel , 0x0F17A2aD659604dcEbDa, 0x0464580d3AF3Ca53AF03, 900000000000000000, 50000000000000000, 600, 86400) +1 GEN  0x17641fa247c4f30cc592902e177d7752804d5fdc087f5b3a95a24fcb328c7a2d  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  REQUESTER opens T3, locking 0.9 GEN for BENEFICIARY and 0.05 GEN for each checker; commit window 600 s  - 3 agree, 0 disagree, 2 idle  {"ok": true, "task": "T3", "payout": "900000000000000000", "fee": "50000000000000000", "held": "10000000000000
+      [20:30:33] CHECKER_A commit(T3, a38a898b148043d342c3e8)  0xd0d620e589efe1c0aa17028ea6e52d889cb0b0705d99d2b29f9c70b124771f5e  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  CHECKER_A commits to T3; CHECKER_B never will  - 3 agree, 0 disagree, 2 idle  {"ok": true, "task": "T3", "checker": "A", "digest": "a38a898b148043d342c3e8833c78013f8741f66d15a23e
+
+[20:30:33] ---- 2: T1, two workings that agree
+      [20:31:12] STRANGER commit(T1, e3d64b9f5434b673f29fa6)  0x436b50b09205c59a649f103e1056e9261254e1d647b5517bdcf5cc8a9f08e035  3 agree, 0 disagree, 2 idle  ERROR
+PASS  STRANGER tries to commit to T1 and is refused: only the two checkers the task names may  - 3 agree, 0 disagree, 2 idle  [EXPECTED] only the two checkers of T1 may commit to it
+      [20:31:53] CHECKER_A commit(T1, ef4181a139ba5c0d6af9ec)  0x46d9c2755e996b203383ce23649c736e35fc78d6a3f9f2b6ce1b98243227b44d  3 agree, 0 disagree, 2 idle  SUCCESS
+      [20:32:32] CHECKER_B commit(T1, a74a32837933752fa84c61)  0x6a4df5502aa5940a9c77504499cce0889a337588721f61f99dc6cec7393a7926  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  both checkers seal their workings for T1; neither working is on chain yet  - 3 agree, 0 disagree, 2 idle | 3 agree, 0 disagree, 2 idle
+      [20:33:12] CHECKER_B reveal(T1, ["Price 240 units; ret, 0f9b440434fccfa7a6c662)  0x7d963586b3b2da679dfeb838afc337ff1e7463ee3875647d2b7eb3a5f25d1c56  3 agree, 0 disagree, 2 idle  ERROR
+PASS  CHECKER_B reveals its working with the wrong salt and is refused: it does not match the digest it committed  - 3 agree, 0 disagree, 2 idle  [EXPECTED] this working and salt do not match the digest checker B committed to T1; send them exactly as they were seale
+      [20:33:54] CHECKER_A reveal(T1, ["The tent cost 240 un, 0f9b440434fccfa7a6c662)  0x485dc76452db60956dd646e247f8401a13c68085042cee517d8cc2dcc1d14e4b  3 agree, 0 disagree, 2 idle  SUCCESS
+      [20:34:33] CHECKER_B reveal(T1, ["Price 240 units; ret, 9423551e65d905eb95b30c)  0x1006ae151f51920e04355a9448c0b7289e8873ac2ba9052b2ed9dc7b4a4d8489  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  both reveal, and T1 is ready to compare  - 3 agree, 0 disagree, 2 idle | 3 agree, 0 disagree, 2 idle  {"ok": true, "task": "T1", "checker": "B", "steps": 4, "status": "revealed"}
+      [20:35:42] BENEFICIARY compare(T1)  0x8920770c9f0d3760935ac35c5763731e5749fb13c813d40b9773e3484f89b131  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  BENEFICIARY asks for T1 to be compared: the four askings read agree  - 3 agree, 0 disagree, 2 idle  agree  readings yes,yes,NONE,NONE
+PASS  and in the same transaction 1.53 GEN reaches BENEFICIARY and 0.05 GEN each checker  - {"beneficiary":"1530000000000000000","checker_a":"50000000000000000","checker_b":"50000000000000000"}
+
+[20:35:43] ---- 3: T2, two workings that part at step 2
+      [20:36:23] CHECKER_A commit(T2, 61f9d9256ebb0df4635563)  0xadd4af56474d22bfbb664057cf0fde140b393bd12759100224336831fd6937cb  3 agree, 0 disagree, 2 idle  SUCCESS
+      [20:37:05] CHECKER_B commit(T2, 3bd2f0b5c75f8d0115b09d)  0xc7d9cd3568fd33d2cca8fe20ffccc6fedfe5e277c73d829e3c9ba669674b7730  3 agree, 0 disagree, 2 idle  SUCCESS
+      [20:37:44] CHECKER_A reveal(T2, ["The rucksack cost 24, 9418885bc5dfb39bd3ce3f)  0x1f20b7061e43723b2ef2fb2d3f9926aeebe433ad241935ca6e6be20e007b0324  3 agree, 0 disagree, 2 idle  SUCCESS
+      [20:38:54] CHECKER_B reveal(T2, ["Price 240 units; ret, 4f4bf83db0b93318376c04)  0x4487bade34c17ed6f84e378963a67526a99311343075e7f4e59a6c90bc1a0d3d  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  both checkers seal and reveal T2; CHECKER_B refunds in full at step 2 and reaches 225  - 3 agree, 0 disagree, 2 idle | 3 agree, 0 disagree, 2 idle | 3 agree, 0 disagree, 2 idle | 3 agree, 0 disagree, 2 idle
+      [20:40:03] STRANGER compare(T2)  0x136631047a4a3c608d1653083091b050ad5be1f8f9124559161663d2a3e0b842  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  STRANGER asks for T2 to be compared: the four askings read diverged at step 2  - 3 agree, 0 disagree, 2 idle  diverged at 2  readings no,no,2,2
+PASS  and in the same transaction each checker is paid 0.05 GEN while the 1.53 GEN payout is held  - {"beneficiary":"0","checker_a":"50000000000000000","checker_b":"50000000000000000"}
+      [20:40:42] BENEFICIARY decide(T2, true)  0xf6e8eb517fbbd13574b5c7919cac43726735ef8ede05de958b210bfd24afd235  3 agree, 0 disagree, 2 idle  ERROR
+PASS  BENEFICIARY tries to release the held payout of T2 and is refused: only the requester decides  - 3 agree, 0 disagree, 2 idle  [EXPECTED] only the requester of T2 decides where its held payout goes
+PASS  task(T2) shows both workings and where they part: step 2, 70 percent against 100 percent  - {"status":"held","step":2,"decide_by":1793392736}
+      [20:41:25] REQUESTER decide(T2, true)  0x1b336bd2565e38b167facfc207fd5701f879681eacb0132a7ec94e7d093ccaad  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  REQUESTER reads both workings and releases T2's 1.53 GEN to BENEFICIARY  - 3 agree, 0 disagree, 2 idle  {"beneficiary":"1530000000000000000","requester":"0"}
+
+[20:41:25] ---- 4: T3, a checker who never committed
+      [20:42:04] STRANGER expire(T3)  0x97adf3966d3f437bb077b684757a8823bb93150c8882336f74259b20fb04b8e2  3 agree, 0 disagree, 2 idle  ERROR
+PASS  STRANGER tries to expire T3 early and is refused: its commit window is still open, or CHECKER_A may still reveal  - 3 agree, 0 disagree, 2 idle  [EXPECTED] a checker that committed to T3 may still reveal; the reveal window is open for another 86269 seconds
+      [20:42:44] CHECKER_A reveal(T3, ["The headlamp cost 90, 79a1f8fe72c349ce3a868c)  0xd3743ecd6e971966cdb73dac126a62d37bbe0b06d9251e534d34befebdc8e6ae  4 agree, 0 disagree, 1 idle  SUCCESS
+PASS  once the commit window has closed by the chain's clock, CHECKER_A reveals T3 alone  - 4 agree, 0 disagree, 1 idle  {"ok": true, "task": "T3", "checker": "A", "steps": 3, "status": "open"}
+      [20:43:23] STRANGER expire(T3)  0x048b60eed497dd99f4560a56c26b0d41b92e93eae38b3970bdb3130c83089a28  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  STRANGER expires T3: the 0.9 GEN payout and CHECKER_B's unearned fee go back to REQUESTER, and CHECKER_A is paid its fee  - 3 agree, 0 disagree, 2 idle  {"requester":"950000000000000000","checker_a":"50000000000000000","checker_b":"0"}
+
+[20:43:24] ---- 5: the views, the code, and the money
+PASS  task(T1): paid, agree, both workings as revealed, nothing held  - {"status":"paid","finding":"agree","readings":1}
+PASS  task(T2): released after diverging at step 2, nothing held  - {"status":"released","finding":"diverged","step":2}
+PASS  task(T3): expired, CHECKER_A's working shown and CHECKER_B's empty  - {"status":"expired","paid":{"beneficiary":"0","requester":"950000000000000000","checker_a":"50000000000000000","checker_b":"0"}}
+PASS  tasks(0, 20): three tasks, a page of at most 20  - [["T1","paid","agree",0],["T2","released","diverged",2],["T3","expired","",0]]
+PASS  tasks_of(CHECKER_A, 0, 20): checker A on all three  - [["T1","checker_a"],["T2","checker_a"],["T3","checker_a"]]
+PASS  stats(): three tasks, two readings, one agreed, one diverged and released, one expired, one refusal, nothing owed  - {"tasks":3,"readings":2,"agreed":1,"diverged":1,"unclear":0,"held":1,"released":1,"refunded":0,"defaulted":0,"expired":1,"refused":1,"paid_total":"4260000000000000000","balance_owed":"0"}
+PASS  rules(): both questions word for word, the combine rule, the money and the limits  - value,questions,keys,askings,reading,combine,compared,not_asked,money,windows,settlement,who,sizes,limits,untrusted
+PASS  the FourEyes contract holds exactly what it owes: nothing  - 0
+PASS  the code deployed at 0xAEEeAb4b80A9EA761a11dE3DF95CbF5F82423a1E is byte for byte contracts/foureyes.py  - 65929 bytes, sha256 f522a65e54eeee84321ce6a4bbc0de5945bc68fd7c35c332d775bfeeaba28c1b
+PASS  over the run every account ends exactly where the receipts say  - REQUESTER -3.31 (receipts -3.31)  BENEFICIARY 3.06 (receipts 3.06)  CHECKER_A 0.15 (receipts 0.15)  CHECKER_B 0.1 (receipts 0.1)  STRANGER 0 (receipts 0)
+
+30 passed, 0 failed
+FourEyes: 0xAEEeAb4b80A9EA761a11dE3DF95CbF5F82423a1E
+transactions: 23 in 23 steps; sent a second time: none
+compareT1        0x8920770c9f0d3760935ac35c5763731e5749fb13c813d40b9773e3484f89b131 3 agree, 0 disagree, 2 idle  agree at 0  readings yes,yes,NONE,NONE
+compareT2        0x136631047a4a3c608d1653083091b050ad5be1f8f9124559161663d2a3e0b842 3 agree, 0 disagree, 2 idle  diverged at 2  readings no,no,2,2
+
+exit 0

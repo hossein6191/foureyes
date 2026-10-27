@@ -302,7 +302,33 @@ line.
 
 ## Evidence
 
-The on-chain run is recorded here once it has run.
+Run on 28 October 2026 on GenLayer Studio (chain 61999) by `tests/on_chain/smoke.mjs`, from generated accounts funded from the
+Studio faucet, none of them anybody's wallet: **REQUESTER** opens tasks, **CHECKER_A** and **CHECKER_B** seal and reveal workings, **BENEFICIARY** is paid, **STRANGER** tries what it may not. **30 passed, 0 failed**; transactions: 23 in 23 steps; sent a second time: none.
+The whole log is `tests/on_chain/smoke-run.log`. On T1 both workings reached 153 and the four askings read agree: 1.53 GEN reached the beneficiary and 0.05 GEN each checker in that transaction. On T2 checker B refunded in full at step 2 and reached 225: the network read diverged at step 2, paid both fees and held the payout until the requester released it. T3, where checker B never committed, expired with the payout back to the requester.
+
+- `foureyes` deployed at [`0xAEEeAb4b80A9EA761a11dE3DF95CbF5F82423a1E`](https://explorer-studio.genlayer.com/address/0xAEEeAb4b80A9EA761a11dE3DF95CbF5F82423a1E)
+
+- the code deployed at 0xAEEeAb4b80A9EA761a11dE3DF95CbF5F82423a1E is byte for byte contracts/foureyes.py: 65929 bytes, sha256 f522a65e54eeee84321ce6a4bbc0de5945bc68fd7c35c332d775bfeeaba28c1b
+
+| step | by | transactions | votes |
+|---|---|---|---|
+| REQUESTER sends open_task one atto short: refused, and every atto it sent comes back in the same transaction | REQUESTER | [0xd6eb3717…](https://explorer-studio.genlayer.com/tx/0xd6eb371739675d7d64efe19fdb551e332f81eb8ca039e23bc525a40d9cc93b2f), [0x00b3723b…](https://explorer-studio.genlayer.com/tx/0x00b3723b40fb20b19a33b33f32bebee20d5c29b5639d7f8d20d24c47bdf33ae3) | 3 agree, 0 disagree, 2 idle |
+| REQUESTER opens T1, locking 1.53 GEN for BENEFICIARY and 0.05 GEN for each checker; commit window 3600 s | REQUESTER | [0xc68e9ce5…](https://explorer-studio.genlayer.com/tx/0xc68e9ce5e283818688ca18165cded74759f692570f561d9659b8af1bc4a4a271) | 3 agree, 0 disagree, 2 idle |
+| REQUESTER opens T2, locking 1.53 GEN for BENEFICIARY and 0.05 GEN for each checker; commit window 3600 s | REQUESTER | [0xaab8652c…](https://explorer-studio.genlayer.com/tx/0xaab8652c0b0cfe6e21e1ee8825981764b2644527e6f41cfdb06ac4429ce80d72) | 3 agree, 0 disagree, 2 idle |
+| REQUESTER opens T3, locking 0.9 GEN for BENEFICIARY and 0.05 GEN for each checker; commit window 600 s | REQUESTER | [0x17641fa2…](https://explorer-studio.genlayer.com/tx/0x17641fa247c4f30cc592902e177d7752804d5fdc087f5b3a95a24fcb328c7a2d) | 3 agree, 0 disagree, 2 idle |
+| CHECKER_A commits to T3; CHECKER_B never will | CHECKER_A | [0xd0d620e5…](https://explorer-studio.genlayer.com/tx/0xd0d620e589efe1c0aa17028ea6e52d889cb0b0705d99d2b29f9c70b124771f5e) | 3 agree, 0 disagree, 2 idle |
+| STRANGER tries to commit to T1 and is refused: only the two checkers the task names may | STRANGER | [0x436b50b0…](https://explorer-studio.genlayer.com/tx/0x436b50b09205c59a649f103e1056e9261254e1d647b5517bdcf5cc8a9f08e035) | 3 agree, 0 disagree, 2 idle |
+| both checkers seal their workings for T1; neither working is on chain yet | CHECKER_A CHECKER_B | [0x46d9c275…](https://explorer-studio.genlayer.com/tx/0x46d9c2755e996b203383ce23649c736e35fc78d6a3f9f2b6ce1b98243227b44d), [0x6a4df550…](https://explorer-studio.genlayer.com/tx/0x6a4df5502aa5940a9c77504499cce0889a337588721f61f99dc6cec7393a7926) | 3 agree, 0 disagree, 2 idle |
+| CHECKER_B reveals its working with the wrong salt and is refused: it does not match the digest it committed | CHECKER_B | [0x7d963586…](https://explorer-studio.genlayer.com/tx/0x7d963586b3b2da679dfeb838afc337ff1e7463ee3875647d2b7eb3a5f25d1c56) | 3 agree, 0 disagree, 2 idle |
+| both reveal, and T1 is ready to compare | CHECKER_A CHECKER_B | [0x485dc764…](https://explorer-studio.genlayer.com/tx/0x485dc76452db60956dd646e247f8401a13c68085042cee517d8cc2dcc1d14e4b), [0x1006ae15…](https://explorer-studio.genlayer.com/tx/0x1006ae151f51920e04355a9448c0b7289e8873ac2ba9052b2ed9dc7b4a4d8489) | 3 agree, 0 disagree, 2 idle |
+| BENEFICIARY asks for T1 to be compared: the four askings read agree | BENEFICIARY | [0x8920770c…](https://explorer-studio.genlayer.com/tx/0x8920770c9f0d3760935ac35c5763731e5749fb13c813d40b9773e3484f89b131) | 3 agree, 0 disagree, 2 idle |
+| both checkers seal and reveal T2; CHECKER_B refunds in full at step 2 and reaches 225 | CHECKER_A CHECKER_B | [0xadd4af56…](https://explorer-studio.genlayer.com/tx/0xadd4af56474d22bfbb664057cf0fde140b393bd12759100224336831fd6937cb), [0xc7d9cd35…](https://explorer-studio.genlayer.com/tx/0xc7d9cd3568fd33d2cca8fe20ffccc6fedfe5e277c73d829e3c9ba669674b7730), [0x1f20b706…](https://explorer-studio.genlayer.com/tx/0x1f20b7061e43723b2ef2fb2d3f9926aeebe433ad241935ca6e6be20e007b0324), [0x4487bade…](https://explorer-studio.genlayer.com/tx/0x4487bade34c17ed6f84e378963a67526a99311343075e7f4e59a6c90bc1a0d3d) | 3 agree, 0 disagree, 2 idle |
+| STRANGER asks for T2 to be compared: the four askings read diverged at step 2 | STRANGER | [0x13663104…](https://explorer-studio.genlayer.com/tx/0x136631047a4a3c608d1653083091b050ad5be1f8f9124559161663d2a3e0b842) | 3 agree, 0 disagree, 2 idle |
+| BENEFICIARY tries to release the held payout of T2 and is refused: only the requester decides | BENEFICIARY | [0xf6e8eb51…](https://explorer-studio.genlayer.com/tx/0xf6e8eb517fbbd13574b5c7919cac43726735ef8ede05de958b210bfd24afd235) | 3 agree, 0 disagree, 2 idle |
+| REQUESTER reads both workings and releases T2's 1.53 GEN to BENEFICIARY | REQUESTER | [0x1b336bd2…](https://explorer-studio.genlayer.com/tx/0x1b336bd2565e38b167facfc207fd5701f879681eacb0132a7ec94e7d093ccaad) | 3 agree, 0 disagree, 2 idle |
+| STRANGER tries to expire T3 early and is refused: its commit window is still open, or CHECKER_A may still reveal | STRANGER | [0x97adf396…](https://explorer-studio.genlayer.com/tx/0x97adf3966d3f437bb077b684757a8823bb93150c8882336f74259b20fb04b8e2) | 3 agree, 0 disagree, 2 idle |
+| once the commit window has closed by the chain's clock, CHECKER_A reveals T3 alone | CHECKER_A | [0xd3743ecd…](https://explorer-studio.genlayer.com/tx/0xd3743ecd6e971966cdb73dac126a62d37bbe0b06d9251e534d34befebdc8e6ae) | 4 agree, 0 disagree, 1 idle |
+| STRANGER expires T3: the 0.9 GEN payout and CHECKER_B's unearned fee go back to REQUESTER, and CHECKER_A is paid its fee | STRANGER | [0x048b60ee…](https://explorer-studio.genlayer.com/tx/0x048b60eed497dd99f4560a56c26b0d41b92e93eae38b3970bdb3130c83089a28) | 3 agree, 0 disagree, 2 idle |
 
 ## Licence
 
